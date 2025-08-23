@@ -1,3 +1,4 @@
+console.log(">>> App.js iniciou <<<");
 // app.js - Lógica JS para Minha Biblioteca Premium (versão corrigida e estável)
 
 // Firebase SDK v9 (Modular)
@@ -588,3 +589,7 @@ window.fecharModal = fecharModal;
 window.editarLivroModal = editarLivroModal;
 window.deletarLivroModal = deletarLivroModal;
 window.lerMaisSinopse = lerMaisSinopse;
+
+
+console.log(">>> App.js terminou <<<", { handleLogin });
+
