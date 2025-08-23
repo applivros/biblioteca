@@ -588,5 +588,6 @@ window.deletarLivroModal = deletarLivroModal;
 window.lerMaisSinopse = lerMaisSinopse;
 
 
+
 console.log(">>> App.js terminou <<<", { handleLogin });
 
