@@ -2,26 +2,23 @@ console.log(">>> App.js iniciou <<<");
 // app.js - Lógica JS para Minha Biblioteca Premium (versão corrigida e estável)
 
 // Firebase SDK v9 (Modular)
-import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
-import {
-  getFirestore,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  setDoc,
-} from "firebase/firestore";
-import { getAnalytics, isSupported } from "firebase/analytics";
+// Config do Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyAGcrW9JyAGM3nf4eHdtXaVozJOrKx8e-s",
+  authDomain: "applivro-75c5b.firebaseapp.com",
+  projectId: "applivro-75c5b",
+  storageBucket: "applivro-75c5b.firebasestorage.app",
+  messagingSenderId: "196142073774",
+  appId: "1:196142073774:web:b1d953b7c633049c9a2a3f",
+  measurementId: "G-T7P5KPE9P4"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const analytics = firebase.analytics();
+
 
 // ===== Config Firebase =====
 const firebaseConfig = {
