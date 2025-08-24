@@ -57,6 +57,8 @@
       signInWithPopup(auth, provider)
         .then(result => {
           showApp(result.user);
+          // Força recarregamento para garantir que o app.js reconheça o usuário
+          window.location.reload();
         })
         .catch(error => {
           alert('Erro ao autenticar: ' + error.message);
