@@ -130,10 +130,6 @@ window.firebaseGetUserTheme = async function(uid) {
 document.addEventListener('DOMContentLoaded', function() {
   carregarTema();
   // Firebase Firestore: aguarda usuário logado para carregar livros
-  window.getFirebaseUser = function() {
-    // O usuário logado é passado do index.html via window.firebaseUser
-    return window.firebaseUser || null;
-  };
   // O index.html deve definir window.firebaseUser ao logar
   if (window.getFirebaseUser()) {
     carregarLivros();
