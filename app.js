@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Firebase Firestore: aguarda usuário logado para carregar livros
     if (window.getFirebaseUser()) {
       console.log('Usuário logado:', window.getFirebaseUser());
-      carregarLivros();
+      // carregarLivros(); // Removido, só carrega após login
     } else {
       console.warn('Nenhum usuário logado. Exibindo alerta.');
       mostrarAlerta('Nenhum usuário logado. Faça login para acessar sua biblioteca.', 'error');
@@ -183,15 +183,19 @@ function mostrarAlerta(mensagem, tipo) {
 }
 
 function atualizarAbas(status) {
-  // Só executa se todas as abas existirem
   const tabTodos = document.getElementById('tabTodos');
   const tabQueroLer = document.getElementById('tabQueroLer');
   const tabLendo = document.getElementById('tabLendo');
   const tabLido = document.getElementById('tabLido');
-  if (!tabTodos || !tabQueroLer || !tabLendo || !tabLido) return;
-  // Lógica para abas desktop
+  // Se as abas não existirem ainda, não faz nada
+  if (!tabTodos || !tabQueroLer || !tabLendo || !tabLido) {
+    console.warn("Abas não encontradas no DOM, ignorando atualização.");
+    return;
+  }
+  // Remove estado ativo de todas
   const tabs = document.querySelectorAll('.tabs-container .tab-btn');
   tabs.forEach(tab => tab.classList.remove('active'));
+  // Marca a aba correta como ativa
   if (status === 'Todos') tabTodos.classList.add('active');
   if (status === 'Quero ler') tabQueroLer.classList.add('active');
   if (status === 'Lendo') tabLendo.classList.add('active');
