@@ -127,16 +127,63 @@ window.firebaseGetUserTheme = async function(uid) {
   return snap.exists() ? snap.data().theme : 'light';
 };
 
+// Função para garantir que todos os elementos essenciais existem no DOM
+function garantirElementosEssenciais() {
+  // listaLivros
+  if (!document.getElementById('listaLivros')) {
+    const div = document.createElement('div');
+    div.id = 'listaLivros';
+    div.className = 'lista-livros';
+    document.body.appendChild(div);
+    console.warn('Elemento listaLivros criado automaticamente.');
+  }
+  // formulario
+  if (!document.getElementById('formulario')) {
+    const div = document.createElement('div');
+    div.id = 'formulario';
+    div.className = 'formulario hidden';
+    document.body.appendChild(div);
+    console.warn('Elemento formulario criado automaticamente.');
+  }
+  // metaSection
+  if (!document.getElementById('metaSection')) {
+    const div = document.createElement('div');
+    div.id = 'metaSection';
+    div.className = 'meta-section hidden';
+    document.body.appendChild(div);
+    console.warn('Elemento metaSection criado automaticamente.');
+  }
+  // modal
+  if (!document.getElementById('modal')) {
+    const div = document.createElement('div');
+    div.id = 'modal';
+    div.className = 'modal';
+    document.body.appendChild(div);
+    console.warn('Elemento modal criado automaticamente.');
+  }
+  // filterMenu
+  if (!document.getElementById('filterMenu')) {
+    const div = document.createElement('div');
+    div.id = 'filterMenu';
+    div.className = 'filter-menu hidden';
+    document.body.appendChild(div);
+    console.warn('Elemento filterMenu criado automaticamente.');
+  }
+  // Abas de filtro (desktop)
+  garantirAbasNoDOM();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   // Adiciona log para depuração
   console.log('DOMContentLoaded: Iniciando app.js');
+  garantirElementosEssenciais();
   carregarTema();
   // Não chama carregarLivros aqui! Só após login e DOM pronto.
   if (!window.getFirebaseUser()) {
     console.warn('Nenhum usuário logado. Exibindo alerta.');
     mostrarAlerta('Nenhum usuário logado. Faça login para acessar sua biblioteca.', 'error');
   }
-  });
+});
 
   // Escuta evento customizado disparado pelo login para inicializar o app
   window.addEventListener('firebaseUserReady', function(e) {
@@ -218,10 +265,10 @@ function garantirAbasNoDOM() {
 }
 
 function atualizarAbas(status) {
-  const tabTodos = document.getElementById('tabTodos');
-  const tabQueroLer = document.getElementById('tabQueroLer');
-  const tabLendo = document.getElementById('tabLendo');
-  const tabLido = document.getElementById('tabLido');
+  const tabTodos = document.querySelector('.tabs #tabTodos');
+  const tabQueroLer = document.querySelector('.tabs #tabQueroLer');
+  const tabLendo = document.querySelector('.tabs #tabLendo');
+  const tabLido = document.querySelector('.tabs #tabLido');
   // Se as abas não existirem ainda, não faz nada
   if (!tabTodos || !tabQueroLer || !tabLendo || !tabLido) {
     console.warn("Abas não encontradas no DOM, ignorando atualização.");
@@ -531,10 +578,10 @@ function carregarLivros() {
         if (metaBar) metaBar.style.width = perc + "%";
       }, 50);
       // Só atualiza abas se todas existirem
-      const tabTodos = document.getElementById('tabTodos');
-      const tabQueroLer = document.getElementById('tabQueroLer');
-      const tabLendo = document.getElementById('tabLendo');
-      const tabLido = document.getElementById('tabLido');
+      const tabTodos = document.querySelector('.tabs #tabTodos');
+      const tabQueroLer = document.querySelector('.tabs #tabQueroLer');
+      const tabLendo = document.querySelector('.tabs #tabLendo');
+      const tabLido = document.querySelector('.tabs #tabLido');
       if (tabTodos && tabQueroLer && tabLendo && tabLido) {
         atualizarAbas(filtroAtual);
       }
