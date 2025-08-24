@@ -59,6 +59,11 @@ const metaSection = document.getElementById("metaSection");
 const modal = document.getElementById("modal");
 const filterMenu = document.getElementById("filterMenu"); // Novo elemento para o menu de filtro
 
+// Definição global para evitar erro de função não encontrada
+window.getFirebaseUser = function() {
+  return window.firebaseUser || null;
+};
+
 // Inicialização ao carregar a página
 // Funções utilitárias Firebase Firestore
 window.firebaseDb = null;
