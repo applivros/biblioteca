@@ -216,7 +216,6 @@ function garantirAbasNoDOM() {
 }
 
 function atualizarAbas(status) {
-  garantirAbasNoDOM();
   const tabTodos = document.getElementById('tabTodos');
   const tabQueroLer = document.getElementById('tabQueroLer');
   const tabLendo = document.getElementById('tabLendo');
@@ -529,8 +528,12 @@ function carregarLivros() {
       setTimeout(() => {
         if (metaBar) metaBar.style.width = perc + "%";
       }, 50);
-      // Só atualiza abas se realmente existirem
-      if (document.getElementById('tabTodos')) {
+      // Só atualiza abas se todas existirem
+      const tabTodos = document.getElementById('tabTodos');
+      const tabQueroLer = document.getElementById('tabQueroLer');
+      const tabLendo = document.getElementById('tabLendo');
+      const tabLido = document.getElementById('tabLido');
+      if (tabTodos && tabQueroLer && tabLendo && tabLido) {
         atualizarAbas(filtroAtual);
       }
       if (livros.length === 0) {
