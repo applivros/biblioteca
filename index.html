@@ -79,15 +79,20 @@
   <!-- APP PRINCIPAL -->
   <div class="app-container hidden" id="appContainer">
     <div class="app">
+      <!-- Abas desktop -->
+      <div class="tabs-container desktop-only">
+        <div class="tabs">
+          <button id="tabTodos" class="tab-btn" onclick="filtrar('Todos')">Todos <span class="badge" id="badgeTodos"></span></button>
+          <button id="tabQueroLer" class="tab-btn" onclick="filtrar('Quero ler')">Quero Ler <span class="badge" id="badgeQueroLer"></span></button>
+          <button id="tabLendo" class="tab-btn" onclick="filtrar('Lendo')">Lendo <span class="badge" id="badgeLendo"></span></button>
+          <button id="tabLido" class="tab-btn" onclick="filtrar('Lido')">Lido <span class="badge" id="badgeLido"></span></button>
+        </div>
+      </div>
       <!-- Conteúdo principal do app será renderizado aqui pelo JS -->
       <main class="app-main">
         <div id="listaLivros" class="books-grid"></div>
         <!-- Elementos necessários para funcionamento do JS -->
         <div style="display:none">
-          <span id="badgeTodos"></span>
-          <span id="badgeQueroLer"></span>
-          <span id="badgeLendo"></span>
-          <span id="badgeLido"></span>
           <span id="metaAnoDisplay"></span>
           <span id="metaContador"></span>
           <span id="metaTotalDisplay"></span>
