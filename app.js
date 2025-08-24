@@ -128,11 +128,16 @@ window.firebaseGetUserTheme = async function(uid) {
 };
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Adiciona log para depuração
+  console.log('DOMContentLoaded: Iniciando app.js');
   carregarTema();
   // Firebase Firestore: aguarda usuário logado para carregar livros
-  // O index.html deve definir window.firebaseUser ao logar
   if (window.getFirebaseUser()) {
+    console.log('Usuário logado:', window.getFirebaseUser());
     carregarLivros();
+  } else {
+    console.warn('Nenhum usuário logado. Exibindo alerta.');
+    mostrarAlerta('Nenhum usuário logado. Faça login para acessar sua biblioteca.', 'error');
   }
 });
 
