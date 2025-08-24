@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Biblioteca Premium</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Firebase CDN ES Modules -->
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+  import { getFirestore, collection, doc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAGcrW9JyAGM3nf4eHdtXaVozJOrKx8e-s",
+      authDomain: "applivro-75c5b.firebaseapp.com",
+      projectId: "applivro-75c5b",
+      storageBucket: "applivro-75c5b.firebasestorage.app",
+      messagingSenderId: "196142073774",
+      appId: "1:196142073774:web:b1d953b7c633049c9a2a3f",
+      measurementId: "G-T7P5KPE9P4"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Exibe tela de login, oculta app
+    function showLogin() {
+      document.getElementById('loginScreen').classList.remove('hidden');
+      document.getElementById('appContainer')?.classList.add('hidden');
+      document.querySelector('.bottom-nav')?.classList.add('hidden');
+      document.querySelector('.top-bar')?.classList.add('hidden');
+    }
+    function showApp(user) {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('appContainer')?.classList.remove('hidden');
+      document.querySelector('.bottom-nav')?.classList.remove('hidden');
+      document.querySelector('.top-bar')?.classList.remove('hidden');
+      // Inicializa coleções e usuário para app.js
+      window.firebaseModules = { getFirestore, collection, doc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, getDoc };
+      window.initFirebaseCollections(app, user);
+    }
+    // Função de logout
+    window.logoutFirebase = function() {
+      import('https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js').then(({ getAuth }) => {
+        getAuth().signOut().then(() => {
+          showLogin();
+        });
+      });
+    };
+
+    // Login com Google
+    document.getElementById('btnGoogleLogin').onclick = function() {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then(result => {
+          showApp(result.user);
+        })
+        .catch(error => {
+          alert('Erro ao autenticar: ' + error.message);
+        });
+    };
+
+    // Verifica login ao carregar
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        showApp(user);
+      } else {
+        showLogin();
+      }
+    });
+  </script>
+</head>
+<body>
+  <!-- APP PRINCIPAL -->
+  <div class="app-container hidden" id="appContainer">
+    <div class="app">
+      <!-- Conteúdo principal do app será renderizado aqui pelo JS -->
+      <main class="app-main">
+        <div id="listaLivros" class="books-grid"></div>
+      </main>
+    </div>
+  </div>
+  <!-- FORMULÁRIO DE LIVRO -->
+  <section id="formulario" class="form-section hidden">
+    <h2 class="form-title" id="formTitulo"><i class="fas fa-plus"></i> Adicionar Livro</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Título</label>
+        <input type="text" id="titulo" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Autor</label>
+        <input type="text" id="autor" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ano</label>
+        <input type="number" id="ano" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Páginas</label>
+        <input type="number" id="paginas" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Páginas Lidas</label>
+        <input type="number" id="paginasLidas" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Capa (URL)</label>
+        <input type="text" id="capa" class="form-input">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select id="status" class="form-input" onchange="exibirAvaliacao()">
+          <option>Quero ler</option>
+          <option>Lendo</option>
+          <option>Lido</option>
+        </select>
+      </div>
+      <div class="form-group hidden" id="avaliacaoGroup">
+        <label class="form-label">Avaliação</label>
+        <div id="avaliacaoEstrelas" class="avaliacao-estrelas"></div>
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" id="inMeta"> Participa da Meta</label>
+        <input type="number" id="metaAnoLivro" class="form-input" placeholder="Ano da meta do livro">
+      </div>
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <label class="form-label">Sinopse</label>
+        <textarea id="sinopse" class="form-input" rows="4"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="salvarLivro()">Salvar</button>
+      <button class="btn btn-secondary" onclick="fecharFormulario()">Cancelar</button>
+    </div>
+  </section>
+  <!-- TELA DE LOGIN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="login-header">
+        <i class="fas fa-book"></i>
+        <h1>Minha Biblioteca</h1>
+      </div>
+      <p class="login-desc">Acesse sua biblioteca premium com Google</p>
+      <button id="btnGoogleLogin" class="btn btn-primary btn-google">
+        <i class="fab fa-google"></i> Entrar com Google
+      </button>
+    </div>
+  </div>
+
+  <!-- TOPO MOBILE/TABLET -->
+  <div class="top-bar mobile-only" style="display: flex; justify-content: flex-end; align-items: center; padding: 8px;">
+    <button id="btnToggleThemeMobileTop" class="btn-icon" onclick="toggleThemeMobile()" style="margin-right: 8px;">
+      <i class="fas fa-moon"></i>
+    </button>
+    <button id="btnLogout" class="btn-icon" onclick="logoutFirebase()">
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
+  </div>
+
+  <!-- BARRA DE NAVEGAÇÃO INFERIOR (MOBILE/TABLET) -->
+  <div class="bottom-nav mobile-only">
+    <button class="btn-icon" onclick="abrirMeta()">
+      <i class="fas fa-bullseye"></i>
+    </button>
+    <button class="btn-icon btn-add-book" onclick="abrirFormulario()">
+      <i class="fas fa-plus"></i>
+    </button>
+    <div class="filter-menu-container">
+      <button class="btn-icon" id="btnFilterMenu" onclick="toggleFilterMenu()">
+        <i class="fas fa-filter"></i>
+      </button>
+      <div id="filterMenu" class="filter-menu hidden">
+        <button class="filter-menu-item" onclick="filtrar('Todos'); toggleFilterMenu()">Todos</button>
+        <button class="filter-menu-item" onclick="filtrar('Quero ler'); toggleFilterMenu()">Quero Ler</button>
+        <button class="filter-menu-item" onclick="filtrar('Lendo'); toggleFilterMenu()">Lendo</button>
+        <button class="filter-menu-item" onclick="filtrar('Lido'); toggleFilterMenu()">Lido</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
