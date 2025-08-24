@@ -28,6 +28,7 @@ function renderEstrelas(valor = 0) {
     container.appendChild(estrela);
   }
 }
+
 // Função para alternar tema no mobile/tablet
 function toggleThemeMobile() {
   document.body.classList.toggle('dark');
@@ -36,13 +37,16 @@ function toggleThemeMobile() {
   if (document.body.classList.contains('dark')) {
     if (iconDesktop) iconDesktop.className = 'fas fa-sun';
     if (iconMobile) iconMobile.className = 'fas fa-sun';
-    localStorage.setItem('theme', 'dark');
+    const user = window.getFirebaseUser();
+    if (user) window.firebaseSetUserTheme(user.uid, 'dark');
   } else {
     if (iconDesktop) iconDesktop.className = 'fas fa-moon';
     if (iconMobile) iconMobile.className = 'fas fa-moon';
-    localStorage.setItem('theme', 'light');
+    const user = window.getFirebaseUser();
+    if (user) window.firebaseSetUserTheme(user.uid, 'light');
   }
 }
+
 // app.js - Lógica JS para Minha Biblioteca Premium
 // Variáveis globais
 let editandoIndex = null;
@@ -100,7 +104,7 @@ window.firebaseSetMeta = async function(docId, meta) {
   return setDoc(doc(window.firebaseDb, 'metas', docId), meta);
 };
 window.firebaseGetMeta = async function(docId) {
-  const { doc, getDocs, query, where } = window.firebaseModules;
+  const { doc } = window.firebaseModules;
   const metaDoc = doc(window.firebaseDb, 'metas', docId);
   const snap = await window.firebaseModules.getDoc(metaDoc);
   return snap.exists() ? snap.data() : null;
@@ -117,6 +121,7 @@ window.firebaseGetUserTheme = async function(uid) {
   const snap = await window.firebaseModules.getDoc(themeDoc);
   return snap.exists() ? snap.data().theme : 'light';
 };
+
 document.addEventListener('DOMContentLoaded', function() {
   carregarTema();
   // Firebase Firestore: aguarda usuário logado para carregar livros
@@ -180,7 +185,7 @@ function atualizarAbas(status) {
 }
 
 function abrirModal(index) {
-  const livros = JSON.parse(localStorage.getItem('livros')) || [];
+  const livros = window.livrosCache || [];
   const livro = livros[index];
   if (!livro) return;
   modalIndex = index;
@@ -213,7 +218,7 @@ function fecharModal() {
 
 function editarLivroModal() {
   if (modalIndex === null) return;
-  const livros = JSON.parse(localStorage.getItem('livros')) || [];
+  const livros = window.livrosCache || [];
   const livro = livros[modalIndex];
   if (!livro) return;
   editandoIndex = modalIndex;
@@ -232,7 +237,7 @@ function editarLivroModal() {
 }
 
 function lerMaisSinopse() {
-  const livros = JSON.parse(localStorage.getItem('livros')) || [];
+  const livros = window.livrosCache || [];
   if (modalIndex === null) return;
   const livro = livros[modalIndex];
   if (!livro) return;
@@ -247,24 +252,35 @@ function toggleTheme() {
   const icon = document.querySelector('#btnToggleTheme i');
   if (document.body.classList.contains('dark')) {
     icon.className = 'fas fa-sun';
-    localStorage.setItem('theme', 'dark');
+    const user = window.getFirebaseUser();
+    if (user) window.firebaseSetUserTheme(user.uid, 'dark');
   } else {
     icon.className = 'fas fa-moon';
-    localStorage.setItem('theme', 'light');
+    const user = window.getFirebaseUser();
+    if (user) window.firebaseSetUserTheme(user.uid, 'light');
   }
 }
 
 function carregarTema() {
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark');
-    const themeBtn = document.getElementById('btnToggleTheme');
-    // Verifica se o botão de tema existe no cabeçalho (desktop)
-    if (themeBtn) {
-      const icon = themeBtn.querySelector('i');
-      icon.className = 'fas fa-sun';
+  const user = window.getFirebaseUser();
+  if (!user) return;
+  window.firebaseGetUserTheme(user.uid).then(theme => {
+    if (theme === 'dark') {
+      document.body.classList.add('dark');
+      const themeBtn = document.getElementById('btnToggleTheme');
+      if (themeBtn) {
+        const icon = themeBtn.querySelector('i');
+        icon.className = 'fas fa-sun';
+      }
+    } else {
+      document.body.classList.remove('dark');
+      const themeBtn = document.getElementById('btnToggleTheme');
+      if (themeBtn) {
+        const icon = themeBtn.querySelector('i');
+        icon.className = 'fas fa-moon';
+      }
     }
-  }
+  });
 }
 
 function abrirFormulario() {
@@ -411,8 +427,8 @@ function carregarLivros() {
   lista.innerHTML = "";
   window.firebaseGetLivros().then(livros => {
     window.livrosCache = livros;
-  const metaAno = document.getElementById("metaAno").value || new Date().getFullYear();
-  const metaTotal = Number(document.getElementById("metaTotalInput").value || 12);
+    const metaAno = document.getElementById("metaAno").value || new Date().getFullYear();
+    const metaTotal = Number(document.getElementById("metaTotalInput").value || 12);
     let contLidoAno = 0;
     let countTodos = livros.length;
     let countQueroLer = 0;
