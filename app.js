@@ -495,7 +495,10 @@ function carregarLivros() {
       setTimeout(() => {
         if (metaBar) metaBar.style.width = perc + "%";
       }, 50);
-      atualizarAbas(filtroAtual);
+      // Só atualiza abas se realmente existirem
+      if (document.getElementById('tabTodos')) {
+        atualizarAbas(filtroAtual);
+      }
       if (livros.length === 0) {
         lista.innerHTML = `
           <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--gray);">
