@@ -183,10 +183,12 @@ function mostrarAlerta(mensagem, tipo) {
 }
 
 function atualizarAbas(status) {
+  // Só executa se as abas existirem
+  const tabTodos = document.getElementById('tabTodos');
+  if (!tabTodos) return;
   // Lógica para abas desktop
   const tabs = document.querySelectorAll('.tabs-container .tab-btn');
   tabs.forEach(tab => tab.classList.remove('active'));
-  const tabTodos = document.getElementById('tabTodos');
   const tabQueroLer = document.getElementById('tabQueroLer');
   const tabLendo = document.getElementById('tabLendo');
   const tabLido = document.getElementById('tabLido');
