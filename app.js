@@ -183,19 +183,19 @@ function mostrarAlerta(mensagem, tipo) {
 }
 
 function atualizarAbas(status) {
-  // Só executa se as abas existirem
+  // Só executa se todas as abas existirem
   const tabTodos = document.getElementById('tabTodos');
-  if (!tabTodos) return;
-  // Lógica para abas desktop
-  const tabs = document.querySelectorAll('.tabs-container .tab-btn');
-  tabs.forEach(tab => tab.classList.remove('active'));
   const tabQueroLer = document.getElementById('tabQueroLer');
   const tabLendo = document.getElementById('tabLendo');
   const tabLido = document.getElementById('tabLido');
-  if (status === 'Todos' && tabTodos) tabTodos.classList.add('active');
-  if (status === 'Quero ler' && tabQueroLer) tabQueroLer.classList.add('active');
-  if (status === 'Lendo' && tabLendo) tabLendo.classList.add('active');
-  if (status === 'Lido' && tabLido) tabLido.classList.add('active');
+  if (!tabTodos || !tabQueroLer || !tabLendo || !tabLido) return;
+  // Lógica para abas desktop
+  const tabs = document.querySelectorAll('.tabs-container .tab-btn');
+  tabs.forEach(tab => tab.classList.remove('active'));
+  if (status === 'Todos') tabTodos.classList.add('active');
+  if (status === 'Quero ler') tabQueroLer.classList.add('active');
+  if (status === 'Lendo') tabLendo.classList.add('active');
+  if (status === 'Lido') tabLido.classList.add('active');
 
   // Lógica para o botão de filtro mobile (opcional, para indicar o filtro atual)
   const btnFilterMenu = document.getElementById('btnFilterMenu');
