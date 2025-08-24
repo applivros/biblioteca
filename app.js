@@ -131,14 +131,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Adiciona log para depuração
   console.log('DOMContentLoaded: Iniciando app.js');
   carregarTema();
-    // Firebase Firestore: aguarda usuário logado para carregar livros
-    if (window.getFirebaseUser()) {
-      console.log('Usuário logado:', window.getFirebaseUser());
-      // carregarLivros(); // Removido, só carrega após login
-    } else {
-      console.warn('Nenhum usuário logado. Exibindo alerta.');
-      mostrarAlerta('Nenhum usuário logado. Faça login para acessar sua biblioteca.', 'error');
-    }
+  // Não chama carregarLivros aqui! Só após login e DOM pronto.
+  if (!window.getFirebaseUser()) {
+    console.warn('Nenhum usuário logado. Exibindo alerta.');
+    mostrarAlerta('Nenhum usuário logado. Faça login para acessar sua biblioteca.', 'error');
+  }
   });
 
   // Escuta evento customizado disparado pelo login para inicializar o app
@@ -146,7 +143,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Usuário já está definido em window.firebaseUser
     console.log('Evento firebaseUserReady recebido:', window.getFirebaseUser(), e.detail);
     carregarTema();
-    carregarLivros();
+    // Aguarda DOM estar pronto antes de exibir livros
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      carregarLivros();
+    } else {
+      document.addEventListener('DOMContentLoaded', carregarLivros, { once: true });
+    }
   });
 // ...existing code...
 
