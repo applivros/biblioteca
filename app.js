@@ -186,10 +186,14 @@ function atualizarAbas(status) {
   // Lógica para abas desktop
   const tabs = document.querySelectorAll('.tabs-container .tab-btn');
   tabs.forEach(tab => tab.classList.remove('active'));
-  if (status === 'Todos') document.getElementById('tabTodos').classList.add('active');
-  if (status === 'Quero ler') document.getElementById('tabQueroLer').classList.add('active');
-  if (status === 'Lendo') document.getElementById('tabLendo').classList.add('active');
-  if (status === 'Lido') document.getElementById('tabLido').classList.add('active');
+  const tabTodos = document.getElementById('tabTodos');
+  const tabQueroLer = document.getElementById('tabQueroLer');
+  const tabLendo = document.getElementById('tabLendo');
+  const tabLido = document.getElementById('tabLido');
+  if (status === 'Todos' && tabTodos) tabTodos.classList.add('active');
+  if (status === 'Quero ler' && tabQueroLer) tabQueroLer.classList.add('active');
+  if (status === 'Lendo' && tabLendo) tabLendo.classList.add('active');
+  if (status === 'Lido' && tabLido) tabLido.classList.add('active');
 
   // Lógica para o botão de filtro mobile (opcional, para indicar o filtro atual)
   const btnFilterMenu = document.getElementById('btnFilterMenu');
