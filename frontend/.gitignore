@@ -1,0 +1,16 @@
+# dependências
+node_modules
+
+# builds
+dist
+build
+
+# logs
+*.log
+
+# banco de dados local
+*.db
+
+# sistema
+.DS_Store
+Thumbs.db
