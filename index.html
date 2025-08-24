@@ -32,13 +32,16 @@
       document.querySelector('.top-bar')?.classList.add('hidden');
     }
     function showApp(user) {
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('appContainer')?.classList.remove('hidden');
-      document.querySelector('.bottom-nav')?.classList.remove('hidden');
-      document.querySelector('.top-bar')?.classList.remove('hidden');
-      // Inicializa coleções e usuário para app.js
-      window.firebaseModules = { getFirestore, collection, doc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, getDoc };
-      window.initFirebaseCollections(app, user);
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appContainer')?.classList.remove('hidden');
+  document.querySelector('.bottom-nav')?.classList.remove('hidden');
+  document.querySelector('.top-bar')?.classList.remove('hidden');
+  // Inicializa coleções e usuário para app.js
+  window.firebaseModules = { getFirestore, collection, doc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, getDoc };
+  window.initFirebaseCollections(app, user);
+  // Chama funções principais do app.js para garantir carregamento correto
+  if (typeof carregarTema === 'function') carregarTema();
+  if (typeof carregarLivros === 'function') carregarLivros();
     }
     // Função de logout
     window.logoutFirebase = function() {
