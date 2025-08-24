@@ -39,9 +39,8 @@
   // Inicializa coleções e usuário para app.js
   window.firebaseModules = { getFirestore, collection, doc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, getDoc };
   window.initFirebaseCollections(app, user);
-  // Chama funções principais do app.js para garantir carregamento correto
-  if (typeof carregarTema === 'function') carregarTema();
-  if (typeof carregarLivros === 'function') carregarLivros();
+  // Dispara evento customizado para notificar app.js que o usuário está pronto
+  window.dispatchEvent(new CustomEvent('firebaseUserReady', { detail: user }));
     }
     // Função de logout
     window.logoutFirebase = function() {
