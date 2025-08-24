@@ -182,7 +182,41 @@ function mostrarAlerta(mensagem, tipo) {
   setTimeout(() => alerta.remove(), 2500);
 }
 
+function garantirAbasNoDOM() {
+  let tabsContainer = document.querySelector('.tabs-container');
+  if (!tabsContainer) {
+    // Cria o container das abas se não existir
+    tabsContainer = document.createElement('div');
+    tabsContainer.className = 'tabs-container';
+    // Insere antes da lista de livros
+    const listaLivros = document.getElementById('listaLivros');
+    if (listaLivros && listaLivros.parentNode) {
+      listaLivros.parentNode.insertBefore(tabsContainer, listaLivros);
+    } else {
+      document.body.appendChild(tabsContainer);
+    }
+  }
+  // Cria as abas se não existirem
+  const abas = [
+    { id: 'tabTodos', texto: 'Todos' },
+    { id: 'tabQueroLer', texto: 'Quero ler' },
+    { id: 'tabLendo', texto: 'Lendo' },
+    { id: 'tabLido', texto: 'Lido' }
+  ];
+  abas.forEach(aba => {
+    if (!document.getElementById(aba.id)) {
+      const btn = document.createElement('button');
+      btn.id = aba.id;
+      btn.className = 'tab-btn';
+      btn.textContent = aba.texto;
+      btn.onclick = () => filtrar(aba.texto);
+      tabsContainer.appendChild(btn);
+    }
+  });
+}
+
 function atualizarAbas(status) {
+  garantirAbasNoDOM();
   const tabTodos = document.getElementById('tabTodos');
   const tabQueroLer = document.getElementById('tabQueroLer');
   const tabLendo = document.getElementById('tabLendo');
