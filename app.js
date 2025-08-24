@@ -128,6 +128,92 @@ window.firebaseGetUserTheme = async function(uid) {
 };
 
 // Função para garantir que todos os elementos essenciais existem no DOM
+function garantirElementosInternos() {
+  // Elementos do modal
+  const modal = document.getElementById('modal');
+  if (modal) {
+    const ids = [
+      'modalTitulo', 'modalAutor', 'modalAno', 'modalPaginas', 'modalStatus',
+      'modalPaginasLidas', 'modalMeta', 'modalSinopse', 'btnLerMais'
+    ];
+    ids.forEach(id => {
+      if (!document.getElementById(id)) {
+        const el = document.createElement(id === 'btnLerMais' ? 'button' : 'div');
+        el.id = id;
+        if (id === 'btnLerMais') {
+          el.textContent = 'Ler mais';
+          el.style.display = 'none';
+          el.onclick = lerMaisSinopse;
+        }
+        modal.appendChild(el);
+        console.warn('Elemento ' + id + ' criado automaticamente dentro do modal.');
+      }
+    });
+  }
+  // Elementos do grupo de avaliação
+  if (!document.getElementById('avaliacaoGroup')) {
+    const div = document.createElement('div');
+    div.id = 'avaliacaoGroup';
+    div.className = 'hidden';
+    document.body.appendChild(div);
+    console.warn('Elemento avaliacaoGroup criado automaticamente.');
+  }
+  if (!document.getElementById('avaliacaoEstrelas')) {
+    const div = document.createElement('div');
+    div.id = 'avaliacaoEstrelas';
+    div.setAttribute('data-valor', '0');
+    document.body.appendChild(div);
+    console.warn('Elemento avaliacaoEstrelas criado automaticamente.');
+  }
+  // Elementos do formulário
+  if (document.getElementById('formulario')) {
+    const ids = [
+      'formTitulo', 'titulo', 'autor', 'ano', 'paginas', 'paginasLidas', 'capa',
+      'sinopse', 'status', 'inMeta', 'metaAnoLivro'
+    ];
+    ids.forEach(id => {
+      if (!document.getElementById(id)) {
+        let el;
+        if (id === 'formTitulo') {
+          el = document.createElement('h2');
+        } else if (id === 'inMeta') {
+          el = document.createElement('input');
+          el.type = 'checkbox';
+        } else {
+          el = document.createElement('input');
+          el.type = 'text';
+        }
+        el.id = id;
+        document.getElementById('formulario').appendChild(el);
+        console.warn('Elemento ' + id + ' criado automaticamente dentro do formulario.');
+      }
+    });
+  }
+  // Elementos da meta
+  if (document.getElementById('metaSection')) {
+    const ids = ['metaAno', 'metaTotalInput', 'metaAnoDisplay', 'metaContador', 'metaTotalDisplay', 'metaBar'];
+    ids.forEach(id => {
+      if (!document.getElementById(id)) {
+        const el = document.createElement('div');
+        el.id = id;
+        document.getElementById('metaSection').appendChild(el);
+        console.warn('Elemento ' + id + ' criado automaticamente dentro do metaSection.');
+      }
+    });
+  }
+  // Elementos dos badges das abas
+  const badgeIds = ['badgeTodos', 'badgeQueroLer', 'badgeLendo', 'badgeLido'];
+  badgeIds.forEach(id => {
+    if (!document.getElementById(id)) {
+      const el = document.createElement('span');
+      el.id = id;
+      el.className = 'badge';
+      document.body.appendChild(el);
+      console.warn('Elemento ' + id + ' criado automaticamente.');
+    }
+  });
+}
+
 function garantirElementosEssenciais() {
   // listaLivros
   if (!document.getElementById('listaLivros')) {
@@ -171,6 +257,8 @@ function garantirElementosEssenciais() {
   }
   // Abas de filtro (desktop)
   garantirAbasNoDOM();
+  // Elementos internos
+  garantirElementosInternos();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
