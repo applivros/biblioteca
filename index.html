@@ -27,13 +27,16 @@
     // Exibe tela de login, oculta app
     function showLogin() {
       document.getElementById('loginScreen').classList.remove('hidden');
-      document.getElementById('appContainer').classList.add('hidden');
+      document.getElementById('appContainer')?.classList.add('hidden');
       document.querySelector('.bottom-nav')?.classList.add('hidden');
     }
-    function showApp() {
+    function showApp(user) {
       document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('appContainer').classList.remove('hidden');
+      document.getElementById('appContainer')?.classList.remove('hidden');
       document.querySelector('.bottom-nav')?.classList.remove('hidden');
+      // Inicializa coleções e usuário para app.js
+      window.firebaseModules = { getFirestore, collection, doc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, getDoc };
+      window.initFirebaseCollections(app, user);
     }
 
     // Login com Google
@@ -41,7 +44,7 @@
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider)
         .then(result => {
-          showApp();
+          showApp(result.user);
         })
         .catch(error => {
           alert('Erro ao autenticar: ' + error.message);
@@ -51,7 +54,7 @@
     // Verifica login ao carregar
     onAuthStateChanged(auth, user => {
       if (user) {
-        showApp();
+        showApp(user);
       } else {
         showLogin();
       }
